@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NavoMusic — Onlayn Musiqa Platformasi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #09090b;
+      color: #f4f4f5;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #121215; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+    .glass-player {
+      background: rgba(18, 18, 22, 0.92);
+      backdrop-filter: blur(18px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .eq-bar {
+      animation: eqAnim 0.8s ease-in-out infinite alternate;
+    }
+    .eq-bar:nth-child(2) { animation-delay: 0.2s; }
+    .eq-bar:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes eqAnim {
+      0% { height: 4px; }
+      100% { height: 16px; }
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.15);
+      border-radius: 999px;
+      height: 5px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #10b981;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="pb-28">
+
+  <!-- Yuqori Navigatsiya (Header) -->
+  <header class="sticky top-0 z-30 bg-[#09090b]/90 backdrop-blur-md border-b border-zinc-800/80 px-4 py-3 md:px-8">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Logo -->
+      <div class="flex items-center gap-2.5 cursor-pointer" onclick="resetFilters()">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+          <i class="fa-solid fa-wave-square text-zinc-950 text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold tracking-tight text-white">Navo<span class="text-emerald-400">Music</span></h1>
+          <p class="text-[11px] text-zinc-400 -mt-1">Sifatli ohanglar olami</p>
+        </div>
+      </div>
+
+      <!-- Qidiruv maydoni -->
+      <div class="relative flex-1 max-w-md order-3 md:order-2 w-full">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Qo‘shiq yoki ijrochi nomini yozing..." 
+          class="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-full pl-10 pr-4 py-2 text-sm text-white placeholder-zinc-500 outline-none transition"
+        />
+      </div>
+
+      <!-- MP3 yuklash tugmasi -->
+      <div class="flex items-center gap-2 order-2 md:order-3">
+        <label for="audioUpload" class="cursor-pointer bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-full transition flex items-center gap-2 shadow-md shadow-emerald-500/15">
+          <i class="fa-solid fa-plus"></i>
+          <span>Qo‘shiq yuklash</span>
+        </label>
+        <input type="file" id="audioUpload" accept="audio/*" multiple class="hidden" />
+      </div>
+    </div>
+  </header>
+
+  <!-- Asosiy Kontent -->
+  <main class="max-w-7xl mx-auto px-4 md:px-8 pt-6">
+    
+    <!-- Banner -->
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-900/60 via-zinc-900 to-teal-900/40 border border-emerald-500/20 p-6 md:p-8 mb-7">
+      <div class="relative z-10 max-w-xl">
+        <span class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold mb-3">
+          <i class="fa-solid fa-fire mr-1"></i> Hafta tanlovi
+        </span>
+        <h2 class="text-2xl md:text-4xl font-extrabold text-white mb-2 leading-tight">
+          Sevimli musiqalaringiz har doim yoningizda
+        </h2>
+        <p class="text-zinc-300 text-sm md:text-base mb-5">
+          O‘zbek va jahon xitlarini tinglang yoki o‘z telefoningizdagi MP3 fayllarni yuklab, shaxsiy pleyeringizda ijro eting.
+        </p>
+        <button onclick="playRandomTrack()" class="bg-white text-zinc-950 hover:bg-zinc-200 font-bold text-sm px-5 py-2.5 rounded-full transition inline-flex items-center gap-2">
+          <i class="fa-solid fa-play"></i> Tasodifiy tinglash
+        </button>
+      </div>
+      <div class="hidden md:flex absolute right-10 top-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-emerald-500/20 blur-2xl"></div>
+      <i class="fa-solid fa-headphones hidden sm:block absolute right-8 bottom-4 text-7xl text-emerald-400/15 rotate-12"></i>
+    </div>
+
+    <!-- Kategoriyalar (Filtrlar) -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-5 no-scrollbar" id="categoryTabs">
+      <button onclick="filterCategory('all')" class="cat-btn active px-4 py-2 rounded-full text-sm font-semibold bg-emerald-500 text-zinc-950 transition whitespace-nowrap">Barchasi</button>
+      <button onclick="filterCategory('uzbek')" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">O‘zbek xitlari</button>
+      <button onclick="filterCategory('jahon')" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">Jahon musiqasi</button>
+      <button onclick="filterCategory('lofi')" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">Tinchlantiruvchi / Lo-Fi</button>
+      <button onclick="filterCategory('favorites')" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">
+        <i class="fa-solid fa-heart text-rose-500 mr-1"></i> Sevimlilar (<span id="favCount">
