@@ -19,7 +19,7 @@
     ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #10b981; }
     .glass-player {
-      background: rgba(18, 18, 22, 0.92);
+      background: rgba(18, 18, 22, 0.94);
       backdrop-filter: blur(18px);
       border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
@@ -46,9 +46,11 @@
       background: #10b981;
       cursor: pointer;
     }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="pb-28">
+<body class="pb-32">
 
   <!-- Yuqori Navigatsiya (Header) -->
   <header class="sticky top-0 z-30 bg-[#09090b]/90 backdrop-blur-md border-b border-zinc-800/80 px-4 py-3 md:px-8">
@@ -60,17 +62,17 @@
         </div>
         <div>
           <h1 class="text-xl font-extrabold tracking-tight text-white">Navo<span class="text-emerald-400">Music</span></h1>
-          <p class="text-[11px] text-zinc-400 -mt-1">Sifatli ohanglar olami</p>
+          <p class="text-[11px] text-zinc-400 -mt-1">Trend & Bass ohanglar</p>
         </div>
       </div>
 
       <!-- Qidiruv maydoni -->
       <div class="relative flex-1 max-w-md order-3 md:order-2 w-full">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
-        <input 
-          type="text" 
-          id="searchInput" 
-          placeholder="Qo‘shiq yoki ijrochi nomini yozing..." 
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Qo‘shiq yoki ijrochi nomini yozing..."
           class="w-full bg-zinc-900 border border-zinc-800 focus:border-emerald-500 rounded-full pl-10 pr-4 py-2 text-sm text-white placeholder-zinc-500 outline-none transition"
         />
       </div>
@@ -79,7 +81,7 @@
       <div class="flex items-center gap-2 order-2 md:order-3">
         <label for="audioUpload" class="cursor-pointer bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-full transition flex items-center gap-2 shadow-md shadow-emerald-500/15">
           <i class="fa-solid fa-plus"></i>
-          <span>Qo‘shiq yuklash</span>
+          <span>MP3 qo‘shish</span>
         </label>
         <input type="file" id="audioUpload" accept="audio/*" multiple class="hidden" />
       </div>
@@ -88,18 +90,18 @@
 
   <!-- Asosiy Kontent -->
   <main class="max-w-7xl mx-auto px-4 md:px-8 pt-6">
-    
+
     <!-- Banner -->
     <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-900/60 via-zinc-900 to-teal-900/40 border border-emerald-500/20 p-6 md:p-8 mb-7">
       <div class="relative z-10 max-w-xl">
         <span class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold mb-3">
-          <i class="fa-solid fa-fire mr-1"></i> Hafta tanlovi
+          <i class="fa-solid fa-fire mr-1"></i> Trend & Bass tanlovi
         </span>
         <h2 class="text-2xl md:text-4xl font-extrabold text-white mb-2 leading-tight">
-          Sevimli musiqalaringiz har doim yoningizda
+          Kuchli bass va eng trenddagi musiqalar
         </h2>
         <p class="text-zinc-300 text-sm md:text-base mb-5">
-          O‘zbek va jahon xitlarini tinglang yoki o‘z telefoningizdagi MP3 fayllarni yuklab, shaxsiy pleyeringizda ijro eting.
+          Repozitoriyadagi MP3 treklarni eshiting yoki telefoningizdagi musiqalarni yuklab, bir zumda ijro eting.
         </p>
         <button onclick="playRandomTrack()" class="bg-white text-zinc-950 hover:bg-zinc-200 font-bold text-sm px-5 py-2.5 rounded-full transition inline-flex items-center gap-2">
           <i class="fa-solid fa-play"></i> Tasodifiy tinglash
@@ -111,9 +113,360 @@
 
     <!-- Kategoriyalar (Filtrlar) -->
     <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-5 no-scrollbar" id="categoryTabs">
-      <button onclick="filterCategory('all')" class="cat-btn active px-4 py-2 rounded-full text-sm font-semibold bg-emerald-500 text-zinc-950 transition whitespace-nowrap">Barchasi</button>
-      <button onclick="filterCategory('uzbek')" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">O‘zbek xitlari</button>
-      <button onclick="filterCategory('jahon')" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">Jahon musiqasi</button>
-      <button onclick="filterCategory('lofi')" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">Tinchlantiruvchi / Lo-Fi</button>
-      <button onclick="filterCategory('favorites')" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">
-        <i class="fa-solid fa-heart text-rose-500 mr-1"></i> Sevimlilar (<span id="favCount">
+      <button onclick="filterCategory('all', this)" class="cat-btn active px-4 py-2 rounded-full text-sm font-semibold bg-emerald-500 text-zinc-950 transition whitespace-nowrap">Barchasi</button>
+      <button onclick="filterCategory('bass', this)" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">Bass / Trend</button>
+      <button onclick="filterCategory('uzbek', this)" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">O‘zbek xitlari</button>
+      <button onclick="filterCategory('jahon', this)" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">Jahon musiqasi</button>
+      <button onclick="filterCategory('lofi', this)" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">Tinchlantiruvchi / Lo-Fi</button>
+      <button onclick="filterCategory('favorites', this)" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 transition whitespace-nowrap">
+        <i class="fa-solid fa-heart text-rose-500 mr-1"></i> Sevimlilar (<span id="favCount">0</span>)
+      </button>
+    </div>
+
+    <!-- Qo'shiqlar ro'yxati -->
+    <div id="trackList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    <div id="emptyState" class="hidden text-center py-16 text-zinc-400">
+      <i class="fa-solid fa-music text-4xl mb-3 text-zinc-600"></i>
+      <p class="text-base font-medium">Mos keladigan qo‘shiq topilmadi</p>
+    </div>
+  </main>
+
+  <!-- Pastki Pleyer -->
+  <footer class="glass-player fixed bottom-0 left-0 right-0 z-40 px-4 py-3 md:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col gap-2">
+      <!-- Progress bar -->
+      <div class="flex items-center gap-3 text-xs text-zinc-400">
+        <span id="currentTime" class="w-10 text-right">0:00</span>
+        <input type="range" id="progressBar" value="0" min="0" max="100" step="0.1" class="flex-1" />
+        <span id="durationTime" class="w-10">0:00</span>
+      </div>
+
+      <!-- Boshqaruv tugmalari -->
+      <div class="flex items-center justify-between gap-3">
+        <!-- Joriy trek -->
+        <div class="flex items-center gap-3 min-w-0 flex-1">
+          <div id="playerCover" class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-music text-white"></i>
+          </div>
+          <div class="min-w-0">
+            <div id="playerTitle" class="font-bold text-sm text-white truncate">Trek tanlanmagan</div>
+            <div id="playerArtist" class="text-xs text-zinc-400 truncate">Ijro etish uchun bosing</div>
+          </div>
+        </div>
+
+        <!-- Tugmalar -->
+        <div class="flex items-center gap-3 sm:gap-5">
+          <button onclick="toggleShuffle()" id="shuffleBtn" title="Tasodifiy" class="text-zinc-400 hover:text-white transition text-sm">
+            <i class="fa-solid fa-shuffle"></i>
+          </button>
+          <button onclick="prevTrack()" title="Oldingi" class="text-zinc-200 hover:text-emerald-400 transition text-base">
+            <i class="fa-solid fa-backward-step"></i>
+          </button>
+          <button onclick="togglePlay()" id="playPauseBtn" class="w-11 h-11 rounded-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 flex items-center justify-center shadow-lg shadow-emerald-500/25 transition">
+            <i id="playIcon" class="fa-solid fa-play ml-0.5"></i>
+          </button>
+          <button onclick="nextTrack()" title="Keyingi" class="text-zinc-200 hover:text-emerald-400 transition text-base">
+            <i class="fa-solid fa-forward-step"></i>
+          </button>
+          <button onclick="toggleRepeat()" id="repeatBtn" title="Takrorlash" class="text-zinc-400 hover:text-white transition text-sm">
+            <i class="fa-solid fa-repeat"></i>
+          </button>
+        </div>
+
+        <!-- Ovoz -->
+        <div class="hidden md:flex items-center justify-end gap-2 flex-1">
+          <i class="fa-solid fa-volume-high text-zinc-400 text-sm"></i>
+          <input type="range" id="volumeBar" min="0" max="1" step="0.01" value="0.8" class="w-24" />
+        </div>
+      </div>
+    </div>
+    <audio id="audioPlayer"></audio>
+  </footer>
+
+  <script>
+    const initialTracks = [
+      {
+        id: "ragga-clap",
+        title: "Ragga Clap",
+        artist: "Furkan Soysal",
+        category: "bass",
+        src: "Furkan Soysal - Ragga Clap.mp3",
+        gradient: "from-emerald-500 to-teal-600"
+      },
+      {
+        id: "bass-2",
+        title: "Ikkinchi Bass Trekingiz",
+        artist: "Bass / Trend",
+        category: "bass",
+        src: "bass2.mp3",
+        gradient: "from-rose-500 to-orange-600"
+      },
+      {
+        id: "uz-1",
+        title: "Yangi O‘zbek Xit",
+        artist: "Uzbek Trend",
+        category: "uzbek",
+        src: "uz1.mp3",
+        gradient: "from-sky-500 to-indigo-600"
+      },
+      {
+        id: "lofi-1",
+        title: "Tungi Lo-Fi Ohang",
+        artist: "Chill Beats",
+        category: "lofi",
+        src: "lofi1.mp3",
+        gradient: "from-purple-500 to-fuchsia-600"
+      }
+    ];
+
+    let tracks = [...initialTracks];
+    let currentIndex = -1;
+    let currentCategory = "all";
+    let searchQuery = "";
+    let isShuffle = false;
+    let isRepeat = false;
+    let favorites = JSON.parse(localStorage.getItem("navomusic_favs") || "[]");
+
+    const audio = document.getElementById("audioPlayer");
+    const trackListEl = document.getElementById("trackList");
+    const emptyStateEl = document.getElementById("emptyState");
+    const playIcon = document.getElementById("playIcon");
+    const playerTitle = document.getElementById("playerTitle");
+    const playerArtist = document.getElementById("playerArtist");
+    const playerCover = document.getElementById("playerCover");
+    const progressBar = document.getElementById("progressBar");
+    const volumeBar = document.getElementById("volumeBar");
+    const currentTimeEl = document.getElementById("currentTime");
+    const durationTimeEl = document.getElementById("durationTime");
+    const favCountEl = document.getElementById("favCount");
+
+    function formatTime(sec) {
+      if (!sec || isNaN(sec)) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s < 10 ? "0" : ""}${s}`;
+    }
+
+    function updateFavCount() {
+      favCountEl.textContent = favorites.length;
+    }
+
+    function toggleFavorite(id, event) {
+      event.stopPropagation();
+      if (favorites.includes(id)) {
+        favorites = favorites.filter(item => item !== id);
+      } else {
+        favorites.push(id);
+      }
+      localStorage.setItem("navomusic_favs", JSON.stringify(favorites));
+      updateFavCount();
+      renderTracks();
+    }
+
+    function getFilteredTracks() {
+      return tracks.filter(track => {
+        const matchesCat =
+          currentCategory === "all" ||
+          (currentCategory === "favorites" && favorites.includes(track.id)) ||
+          track.category === currentCategory;
+        const matchesSearch =
+          track.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          track.artist.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCat && matchesSearch;
+      });
+    }
+
+    function renderTracks() {
+      const visible = getFilteredTracks();
+      trackListEl.innerHTML = "";
+
+      if (visible.length === 0) {
+        emptyStateEl.classList.remove("hidden");
+        return;
+      }
+      emptyStateEl.classList.add("hidden");
+
+      visible.forEach(track => {
+        const realIndex = tracks.findIndex(t => t.id === track.id);
+        const isCurrent = realIndex === currentIndex;
+        const isPlayingCurrent = isCurrent && !audio.paused;
+        const isFav = favorites.includes(track.id);
+
+        const card = document.createElement("div");
+        card.onclick = () => selectAndPlay(realIndex);
+        card.className = `group cursor-pointer rounded-2xl p-4 border transition flex items-center justify-between gap-3 ${
+          isCurrent
+            ? "bg-zinc-900 border-emerald-500/60 shadow-lg shadow-emerald-500/10"
+            : "bg-zinc-900/70 border-zinc-800/80 hover:bg-zinc-900 hover:border-zinc-700"
+        }`;
+
+        card.innerHTML = `
+          <div class="flex items-center gap-3.5 min-w-0">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${track.gradient || "from-emerald-500 to-teal-600"} flex items-center justify-center shrink-0 relative">
+              ${
+                isPlayingCurrent
+                  ? `<div class="flex items-end gap-0.5 h-4">
+                       <span class="w-1 bg-white rounded eq-bar"></span>
+                       <span class="w-1 bg-white rounded eq-bar"></span>
+                       <span class="w-1 bg-white rounded eq-bar"></span>
+                     </div>`
+                  : `<i class="fa-solid fa-play text-white text-sm"></i>`
+              }
+            </div>
+            <div class="min-w-0">
+              <h3 class="font-bold text-sm sm:text-base text-white truncate ${isCurrent ? "text-emerald-400" : ""}">${track.title}</h3>
+              <p class="text-xs text-zinc-400 truncate">${track.artist}</p>
+            </div>
+          </div>
+          <button onclick="toggleFavorite('${track.id}', event)" class="p-2 rounded-full hover:bg-zinc-800 transition shrink-0">
+            <i class="fa-${isFav ? "solid text-rose-500" : "regular text-zinc-400"} fa-heart"></i>
+          </button>
+        `;
+        trackListEl.appendChild(card);
+      });
+    }
+
+    function selectAndPlay(index) {
+      if (index < 0 || index >= tracks.length) return;
+      if (currentIndex === index) {
+        togglePlay();
+        return;
+      }
+      currentIndex = index;
+      const track = tracks[currentIndex];
+      audio.src = track.src;
+      playerTitle.textContent = track.title;
+      playerArtist.textContent = track.artist;
+      playerCover.className = `w-11 h-11 rounded-xl bg-gradient-to-br ${track.gradient || "from-emerald-500 to-teal-700"} flex items-center justify-center shrink-0`;
+      audio.play().catch(() => {});
+      renderTracks();
+    }
+
+    function togglePlay() {
+      if (currentIndex === -1 && tracks.length > 0) {
+        selectAndPlay(0);
+        return;
+      }
+      if (audio.paused) {
+        audio.play().catch(() => {});
+      } else {
+        audio.pause();
+      }
+    }
+
+    function nextTrack() {
+      if (tracks.length === 0) return;
+      if (isShuffle) {
+        playRandomTrack();
+        return;
+      }
+      const nextIdx = (currentIndex + 1) % tracks.length;
+      selectAndPlay(nextIdx);
+    }
+
+    function prevTrack() {
+      if (tracks.length === 0) return;
+      const prevIdx = (currentIndex - 1 + tracks.length) % tracks.length;
+      selectAndPlay(prevIdx);
+    }
+
+    function playRandomTrack() {
+      if (tracks.length === 0) return;
+      const randIdx = Math.floor(Math.random() * tracks.length);
+      currentIndex = -1;
+      selectAndPlay(randIdx);
+    }
+
+    function toggleShuffle() {
+      isShuffle = !isShuffle;
+      document.getElementById("shuffleBtn").classList.toggle("text-emerald-400", isShuffle);
+      document.getElementById("shuffleBtn").classList.toggle("text-zinc-400", !isShuffle);
+    }
+
+    function toggleRepeat() {
+      isRepeat = !isRepeat;
+      audio.loop = isRepeat;
+      document.getElementById("repeatBtn").classList.toggle("text-emerald-400", isRepeat);
+      document.getElementById("repeatBtn").classList.toggle("text-zinc-400", !isRepeat);
+    }
+
+    function filterCategory(cat, btnEl) {
+      currentCategory = cat;
+      document.querySelectorAll(".cat-btn").forEach(btn => {
+        btn.classList.remove("bg-emerald-500", "text-zinc-950", "active");
+        btn.classList.add("bg-zinc-900", "text-zinc-300");
+      });
+      if (btnEl) {
+        btnEl.classList.remove("bg-zinc-900", "text-zinc-300");
+        btnEl.classList.add("bg-emerald-500", "text-zinc-950", "active");
+      }
+      renderTracks();
+    }
+
+    function resetFilters() {
+      searchQuery = "";
+      document.getElementById("searchInput").value = "";
+      const firstBtn = document.querySelector(".cat-btn");
+      filterCategory("all", firstBtn);
+    }
+
+    document.getElementById("searchInput").addEventListener("input", e => {
+      searchQuery = e.target.value;
+      renderTracks();
+    });
+
+    document.getElementById("audioUpload").addEventListener("change", e => {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+      files.forEach((file, idx) => {
+        const cleanName = file.name.replace(/\.[^/.]+$/, "");
+        tracks.unshift({
+          id: "local-" + Date.now() + "-" + idx,
+          title: cleanName,
+          artist: "Yuklangan MP3",
+          category: "bass",
+          src: URL.createObjectURL(file),
+          gradient: "from-amber-500 to-rose-600"
+        });
+      });
+      renderTracks();
+      selectAndPlay(0);
+    });
+
+    audio.addEventListener("play", () => {
+      playIcon.classList.remove("fa-play", "ml-0.5");
+      playIcon.classList.add("fa-pause");
+      renderTracks();
+    });
+
+    audio.addEventListener("pause", () => {
+      playIcon.classList.remove("fa-pause");
+      playIcon.classList.add("fa-play", "ml-0.5");
+      renderTracks();
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      if (!audio.duration) return;
+      progressBar.value = (audio.currentTime / audio.duration) * 100;
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+      durationTimeEl.textContent = formatTime(audio.duration);
+    });
+
+    progressBar.addEventListener("input", () => {
+      if (!audio.duration) return;
+      audio.currentTime = (progressBar.value / 100) * audio.duration;
+    });
+
+    volumeBar.addEventListener("input", () => {
+      audio.volume = volumeBar.value;
+    });
+
+    audio.addEventListener("ended", () => {
+      if (!isRepeat) nextTrack();
+    });
+
+    updateFavCount();
+    renderTracks();
+  </script>
+</body>
+</html>
